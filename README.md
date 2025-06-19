@@ -24,7 +24,7 @@ npm install
 npm run dev
 ```
 
-The server will start on `http://localhost:3000`
+The server will start on `http://localhost:3950`
 
 ### Production
 
@@ -103,7 +103,7 @@ npm start
 
 ## Environment Variables
 
-- `PORT` - Server port (default: 3000)
+- `PORT` - Server port (default: 3950)
 
 ## Error Handling
 
