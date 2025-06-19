@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { cloneOrGetRepository } from "../services/gitService";
+import { cloneOrGetRepository } from "../services/gitService.js";
 import {
   processPrompt,
   createSession,
@@ -9,7 +9,7 @@ import {
   type ClaudePromptRequest,
   type CreateSessionRequest,
   type SessionResponse,
-} from "../services/claudeService";
+} from "../services/claudeService.js";
 
 export const claudeRouter = express.Router();
 

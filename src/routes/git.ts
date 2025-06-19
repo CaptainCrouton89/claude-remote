@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { cloneOrGetRepository, getRepositoryPath } from "../services/gitService";
+import { cloneOrGetRepository, getRepositoryPath } from "../services/gitService.js";
 import simpleGit from "simple-git";
 import fs from "fs/promises";
 import path from "path";

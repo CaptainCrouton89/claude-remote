@@ -13,8 +13,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Docker Commands
 
-- `docker compose up` - Run server in container (port 3950)
-- `docker build -t claude-remote .` - Build container image
+- `docker compose up -d` - Run server in container (port 3950)
+- `docker compose build --no-cache` - Force rebuild container image
+- `docker compose down` - Stop and remove containers
+- `docker logs claude-remote-api` - View container logs
 
 ## Code Architecture
 
@@ -51,20 +53,22 @@ The Claude service uses the `@anthropic-ai/claude-code` SDK with these configura
 
 ### API Endpoints
 
-**POST /git/init** - Clone repository from URL
+**Server runs on port 3950** (both development and Docker)
 
+**GET /health** - Server health check
+**GET /api** - API documentation with auto-discovered routes (21 total endpoints)
+
+**POST /git/init** - Clone repository from URL
 - Validates HTTPS/SSH Git URLs
 - Creates repository in `repos/` directory
 - Prevents duplicate clones
 
 **POST /git/save** - Commit and push changes
-
 - Stages all changes in repository
 - Creates commit with provided message
 - Pushes to remote origin
 
 **POST /claude/prompt** - Process Claude prompts
-
 - Optional `repoName` parameter for repository context
 - Uses Claude Code SDK with full tool permissions
 - Returns conversation results and any errors
@@ -74,7 +78,8 @@ The Claude service uses the `@anthropic-ai/claude-code` SDK with these configura
 ### TypeScript Configuration
 
 - Strict mode enabled with additional safety checks
-- ES2022 target with CommonJS modules (required for dependency compatibility)
+- ES2022 target with ES modules (package.json has "type": "module")
+- Requires .js extensions for relative imports in ES modules
 - Source maps and declarations generated for debugging
 
 ### Security Middleware
