@@ -1,5 +1,6 @@
 import { query, type SDKMessage } from "@anthropic-ai/claude-code";
 import express, { Request, Response } from "express";
+import { gitService } from "../services/gitService";
 
 export const claudeRouter = express.Router();
 
@@ -25,12 +26,32 @@ claudeRouter.post(
       }
 
       console.log("Received Claude prompt:", prompt);
+
+      let cwd = process.cwd();
+
       if (repo) {
         console.log("Target repository:", repo);
-      }
 
-      // Set working directory if repo is provided
-      const cwd = repo || process.cwd();
+        // Try to clone or get the repository
+        const cloneResult = await gitService.cloneOrGetRepository(repo);
+
+        if (!cloneResult.success) {
+          res.status(400).json({
+            error: "Failed to access repository",
+            details: cloneResult.error,
+          });
+          return;
+        }
+
+        cwd = cloneResult.path;
+        console.log(`Using repository at: ${cwd}`);
+
+        if (!cloneResult.alreadyExists) {
+          console.log(
+            `Repository cloned successfully: ${cloneResult.repoName}`
+          );
+        }
+      }
 
       const messages: SDKMessage[] = [];
 
@@ -40,9 +61,18 @@ claudeRouter.post(
         options: {
           maxTurns: 20,
           cwd: cwd,
-          allowedTools: ["Read", "Write", "Bash"],
+          allowedTools: [
+            "Read",
+            "Write",
+            "Edit",
+            "MultiEdit",
+            "Bash",
+            "Glob",
+            "Grep",
+            "LS",
+            "Git",
+          ],
           permissionMode: "acceptEdits",
-          executableArgs: ["-p", "--output-format json"],
           continue: continuePrompt,
         },
       })) {

@@ -7,7 +7,7 @@ import { claudeRouter } from "./routes/claude";
 import { gitRouter } from "./routes/git";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3955;
 
 // Middleware
 app.use(helmet());
