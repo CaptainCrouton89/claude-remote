@@ -1,6 +1,9 @@
 # Use Node.js 20 LTS
 FROM node:20-alpine
 
+# Install Git and other dependencies
+RUN apk add --no-cache git curl
+
 # Set working directory
 WORKDIR /app
 
@@ -20,11 +23,11 @@ RUN npm run build
 RUN mkdir -p /app/repos
 
 # Expose port
-EXPOSE 3955
+EXPOSE 3950
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD curl -f http://localhost:3955/health || exit 1
+  CMD curl -f http://localhost:3950/health || exit 1
 
 # Start the application
 CMD ["npm", "start"]
